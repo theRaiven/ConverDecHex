@@ -28,10 +28,32 @@ std::map<std::string, char> Bin_Hex_Table
 	{ "1100" , 'C' },
 	{ "1101" , 'D' },
 	{ "1110" , 'E' },
-	{ "1111" , 'F' }
+	{ "1111" , 'F' },
+};
+std::map<char, std::vector<int>> Hex_Bin_Table
+{
+	{ '0', {0, 0, 0, 0} },
+	{ '1', {0, 0, 0, 1} },
+	{ '2', {0, 0, 1, 0} },
+	{ '3', {0, 0, 1, 1} },
+
+	{ '4', {0, 1, 0, 0} },
+	{ '5', {0, 1, 0, 1} },
+	{ '6', {0, 1, 1, 0} },
+	{ '7', {0, 1, 1, 1} },
+
+	{ '8', {1, 0, 0, 0} },
+	{ '9', {1, 0, 0, 1} },
+	{ 'A', {1, 0, 1, 0} },
+	{ 'B', {1, 0, 1, 1} },
+
+	{ 'C', {1, 1, 0, 0} },
+	{ 'D', {1, 1, 0, 1} },
+	{ 'E', {1, 1, 1, 0} },
+	{ 'F', {1, 1, 1, 1} }
 };
 
-auto ConverBunary = [](vector<int>& binary_num_INT, vector<int>& binary_num_FRACT, const auto convert_num)
+auto ConvertBunary = [](vector<int>& binary_num_INT, vector<int>& binary_num_FRACT, const auto convert_num)
 {
 	int integer_part = move(fabs(convert_num)); 
 	auto fractional_part = move(fabs(convert_num) - integer_part);
@@ -80,14 +102,14 @@ auto ConvertHex = [](const auto convert_num)
 	vector<int> binary_num_INT_mantissa;
 	vector<int> binary_num_FRACT_mantissa;
 	
-	ConverBunary(binary_num_INT_mantissa, binary_num_FRACT_mantissa, convert_num);
+	ConvertBunary(binary_num_INT_mantissa, binary_num_FRACT_mantissa, convert_num);
 
 	int Pc = binary_num_INT_mantissa.size() - 1 + (pow(2, is_same_v<decltype(convert_num), const double> ? 10 : 7) - 1);
 	vector<int> binary_num_INT;
 	vector<int> binary_num_FRACT;
 
 	string hex_num;
-	ConverBunary(binary_num_INT, binary_num_FRACT, Pc);
+	ConvertBunary(binary_num_INT, binary_num_FRACT, Pc);
 
 	vector<int> binary_num = { convert_num <= 0 ? 1 : 0 };
 	for (int i = 0; i < binary_num_INT.size(); i++)
@@ -114,17 +136,85 @@ auto ConvertHex = [](const auto convert_num)
 	return hex_num;
 };
 
+auto ConvertDec(string convert_num)
+{
+	vector<int> binary_num ;
+	for (int i = 0; i < convert_num.size();i++)
+	{
+		vector<int> temp = Hex_Bin_Table[convert_num[i]];
+		for(const auto& c : temp)
+		{
+			binary_num.push_back(c);
+			//cout << c;
+		}
+		//cout << '\t';
+	}
+
+	
+	int NUMBER_SYSTEM = convert_num.size() == 8 ?  7 : 10;
+
+	int Pc = 0;
+	int size_integer_mantissa;
+
+	int i; int j;
+	for (i = 0; i < NUMBER_SYSTEM + 1; i++)
+	{
+		Pc += pow(2, NUMBER_SYSTEM-i) * binary_num[i+1];
+	}
+	i++;
+	size_integer_mantissa = Pc - (pow(2, NUMBER_SYSTEM) - 1);
+
+	vector<int> binary_num_INT_mantissa = { 1 };
+	vector<int> binary_num_FRACT_mantissa;
+		
+	for (j = i; j < i + size_integer_mantissa; j++)
+	{
+		binary_num_INT_mantissa.push_back(binary_num[j]);
+	}
+	i = j;
+	for (; i < binary_num.size(); i++)
+	{
+		binary_num_FRACT_mantissa.push_back(binary_num[i]);
+	}
+
+	int integer_part = 0;
+	for (i = 0; i < binary_num_INT_mantissa.size(); i++)
+	{
+		integer_part += pow(2, binary_num_INT_mantissa.size() - i - 1) * binary_num_INT_mantissa[i];
+	}
+	long double fract_part = 0;
+	for (i = 0; i < binary_num_FRACT_mantissa.size(); i++)
+	{
+		fract_part += pow(2, - i - 1) * binary_num_FRACT_mantissa[i];
+	}
+	return (binary_num[0] <= 0 ? 1 : -1)*(integer_part + fract_part);
+	
+	
+}
+
 int main()
 {
 	setlocale(LC_ALL, "RUS");
-	double num0 = -285.563;
-	double num = 437.938;
-	float num1 = 22.5078;
-	float num2 = -86.0156;
-	cout << ConvertHex(num0) << endl;
-	cout << ConvertHex(num) << endl;
-	cout << ConvertHex(num1) << endl;
-	cout << ConvertHex(num2) << endl;
-	 //ConvertHex(num1);
+	{
+		double num0 = -285.563;
+		double num = 437.938;
+		float num1 = 22.5078;
+		float num2 = -86.0156;
+		cout << ConvertHex(num0) << endl;
+		cout << ConvertHex(num) << endl;
+		cout << ConvertHex(num1) << endl;
+		cout << ConvertHex(num2) << endl;
+	}
+	{
+		string num = "42B80000";
+		string num1 = "C2D62000";
+		string num2 = "407229C000000000";
+		string num3 = "C068C0C000000000";
+		cout << ConvertDec(num) << endl;
+		cout << ConvertDec(num1) << endl;
+		cout << ConvertDec(num2) << endl;
+		cout << ConvertDec(num3) << endl;
+	}
+
 }
 

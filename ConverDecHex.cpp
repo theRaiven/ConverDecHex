@@ -211,7 +211,7 @@ int main()
 		cout << ConvertDec(num) << endl;
 		cout << ConvertDec(num1) << endl;
 		cout << ConvertDec(num2) << endl;
-		cout << ConvertDec(num3) << endl;
+		cout << ConvertDec(num3);
 	}
 
 }

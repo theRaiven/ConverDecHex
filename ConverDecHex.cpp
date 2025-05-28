@@ -165,7 +165,7 @@ auto ConvertDec(string convert_num)
 	vector<int> binary_num_INT_mantissa{ 1 };
 	vector<int> binary_num_FRACT_mantissa;
 
-	for (j = move(i); j < i + size_integer_mantissa; j++)
+	for (j = i; j < i + size_integer_mantissa; j++)
 	{
 		binary_num_INT_mantissa.push_back(binary_num[j]);
 	}

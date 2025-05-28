@@ -149,7 +149,7 @@ auto ConvertDec(string convert_num)
 	}
 
 
-	int NUMBER_SYSTEM = move(convert_num.size() == 8 ? 7 : 10);
+	int NUMBER_SYSTEM = convert_num.size() == 8 ? 7 : 10;
 
 	int Pc{ 0 };
 	int size_integer_mantissa;
@@ -160,7 +160,7 @@ auto ConvertDec(string convert_num)
 		Pc += pow(2, NUMBER_SYSTEM - i) * binary_num[i + 1];
 	}
 	i++;
-	size_integer_mantissa = move(Pc - (pow(2, NUMBER_SYSTEM) - 1));
+	size_integer_mantissa = Pc - (pow(2, NUMBER_SYSTEM) - 1);
 
 	vector<int> binary_num_INT_mantissa{ 1 };
 	vector<int> binary_num_FRACT_mantissa;
@@ -169,7 +169,7 @@ auto ConvertDec(string convert_num)
 	{
 		binary_num_INT_mantissa.push_back(binary_num[j]);
 	}
-	i = move(j);
+	i = j;
 	for (; i < binary_num.size(); i++)
 	{
 		binary_num_FRACT_mantissa.push_back(binary_num[i]);

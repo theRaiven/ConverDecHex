@@ -55,8 +55,8 @@ std::map<char, std::vector<int>> Hex_Bin_Table
 
 auto ConvertBunary = [](vector<int>& binary_num_INT, vector<int>& binary_num_FRACT, const auto convert_num)
 {
-	int integer_part = move(fabs(convert_num)); 
-	auto fractional_part = move(fabs(convert_num) - integer_part);
+	int integer_part = fabs(convert_num); 
+	auto fractional_part = fabs(convert_num) - integer_part;
 
 
 	int i{ 0 };
